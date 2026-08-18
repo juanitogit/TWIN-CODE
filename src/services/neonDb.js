@@ -1,6 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 
-export const NEON_CONNECTION_STRING = 'postgresql://neondb_owner:npg_GrYel5Hs8DUy@ep-shy-waterfall-acbpx9qg-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require';
+export const NEON_CONNECTION_STRING = import.meta.env?.VITE_DATABASE_URL || 'postgresql://neondb_owner:npg_GrYel5Hs8DUy@ep-shy-waterfall-acbpx9qg-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require';
 
 // Neon HTTP SQL client
 export const sql = neon(NEON_CONNECTION_STRING);
@@ -47,7 +47,7 @@ export async function initDatabase() {
       );
     `;
 
-    // Ensure email and website columns exist in team_members
+    // Ensure columns exist in team_members
     await sql`ALTER TABLE team_members ADD COLUMN IF NOT EXISTS email VARCHAR(255);`;
     await sql`ALTER TABLE team_members ADD COLUMN IF NOT EXISTS website TEXT;`;
     await sql`ALTER TABLE team_members ADD COLUMN IF NOT EXISTS whatsapp VARCHAR(50);`;
