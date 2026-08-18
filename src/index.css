@@ -1,0 +1,325 @@
+/* Apple Human Interface Guidelines & Hyperstudio Dark Theme */
+:root {
+  /* Colors */
+  --color-obsidian: #000000;
+  --color-carbon: #0d0d0d;
+  --color-chalk: #f5f5f7;
+  --color-smoke: #86868b;
+  --color-ash: #d2d2d7;
+  --color-graphite: #1d1d1f;
+  --color-border-subtle: rgba(255, 255, 255, 0.12);
+  --color-border-focus: rgba(255, 255, 255, 0.28);
+  --color-iron: #424245;
+  --color-signal-white: #ffffff;
+  --color-compass-gold: #c6a972;
+  --color-whatsapp: #25d366;
+  --color-pulse-green: #30d158;
+
+  /* Typography — Apple San Francisco System */
+  --font-sf: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", Menlo, Monaco, Consolas, monospace;
+
+  /* Typography — Scale */
+  --text-caption: 12px;
+  --text-body: 16px;
+  --leading-body: 1.55;
+  --text-heading-xs: 18px;
+  --text-subheading: 20px;
+  --text-heading-sm: 24px;
+  --text-heading: clamp(28px, 4vw, 38px);
+  --text-heading-lg: 48px;
+  --text-display: clamp(32px, 5.2vw, 68px);
+  --leading-display: 1.08;
+  --tracking-display: -0.035em;
+
+  /* Apple Radii */
+  --radius-apple-sm: 6px;
+  --radius-apple-md: 8px;
+  --radius-apple-lg: 12px;
+  --radius-apple-xl: 18px;
+
+  /* Layout */
+  --page-max-width: 1200px;
+}
+
+/* CSS Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  background-color: var(--color-obsidian);
+  color: var(--color-chalk);
+  font-family: var(--font-sf);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--color-obsidian);
+  color: var(--color-chalk);
+  font-family: var(--font-sf);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sf);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--color-chalk);
+}
+
+p {
+  color: var(--color-smoke);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+button {
+  font-family: var(--font-sf);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Layout Utilities */
+.container {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* Apple Styled Buttons */
+.btn-apple-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: var(--radius-apple-sm);
+  padding: 11px 22px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border: 1px solid #ffffff;
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.btn-apple-primary:hover {
+  background-color: #e5e5ea;
+  border-color: #e5e5ea;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+}
+
+.btn-apple-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #f5f5f7;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-apple-sm);
+  padding: 11px 22px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.btn-apple-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: var(--color-border-focus);
+  transform: translateY(-2px);
+}
+
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: rgba(37, 211, 102, 0.1);
+  color: #25d366;
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  border-radius: var(--radius-apple-sm);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.btn-whatsapp:hover {
+  background-color: #25d366;
+  color: #000000;
+  border-color: #25d366;
+  transform: translateY(-1px);
+}
+
+.btn-graphite-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--color-smoke);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-apple-sm);
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 400;
+  transition: all 0.2s ease;
+}
+
+.btn-graphite-outline:hover {
+  color: var(--color-chalk);
+  border-color: var(--color-border-focus);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Animations with Apple Smoothness */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1.1em;
+  vertical-align: middle;
+  margin-left: 4px;
+  background-color: #ffffff;
+  animation: cursorBlink 0.9s infinite;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.75s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.animate-delay-1 {
+  animation-delay: 0.12s;
+}
+
+.animate-delay-2 {
+  animation-delay: 0.24s;
+}
+
+.animate-delay-3 {
+  animation-delay: 0.36s;
+}
+
+/* Apple Text Gradient */
+.apple-text-gradient {
+  background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Interactive Card Effects with Apple Subtle Hover */
+.interactive-card {
+  transition: transform 0.28s cubic-bezier(0.25, 0.1, 0.25, 1),
+              border-color 0.28s cubic-bezier(0.25, 0.1, 0.25, 1),
+              background-color 0.28s ease,
+              box-shadow 0.28s ease;
+}
+
+.interactive-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-border-focus) !important;
+  background-color: #111113 !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+}
+
+/* Monospace / Font */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.apple-section-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-smoke);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Forms with Apple Input Styling */
+.hyper-input, .hyper-textarea, .hyper-select {
+  width: 100%;
+  background-color: #121214;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-apple-sm);
+  color: var(--color-chalk);
+  padding: 12px 16px;
+  font-family: var(--font-sf);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.hyper-input:focus, .hyper-textarea:focus, .hyper-select:focus {
+  border-color: #ffffff;
+  background-color: #18181b;
+}
+
+.hyper-input::placeholder, .hyper-textarea::placeholder {
+  color: #6e6e73;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #2c2c2e;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #48484a;
+}
+
+/* Dedicated Mobile Breakpoints */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  section {
+    padding-top: 64px !important;
+    padding-bottom: 64px !important;
+  }
+}
