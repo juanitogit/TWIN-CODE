@@ -101,11 +101,13 @@ class EmailService {
         INSERT INTO contact_inquiries (id, name, email, service_type, message, sent_to, status, received_at)
         VALUES (${newMessage.id}, ${newMessage.name}, ${newMessage.email}, ${newMessage.serviceType}, ${newMessage.message}, ${newMessage.sentTo}, ${newMessage.status}, CURRENT_TIMESTAMP);
       `;
+      console.log("Inquiry saved in PostgreSQL successfully");
     } catch (e) {
       console.error("Error storing inquiry in PostgreSQL:", e);
     }
 
-    // 2. Send Real Email Notification via Gmail SMTP API
+    // 2. Send Real Email Notification via /api/send-email (Cloudflare Function / Vite)
+    let emailSent = false;
     try {
       const res = await fetch('/api/send-email', {
         method: 'POST',
@@ -119,7 +121,10 @@ class EmailService {
         })
       });
       const data = await res.json();
-      console.log("Email dispatch result:", data);
+      if (data.success) {
+        emailSent = true;
+        console.log("Email sent successfully via Cloudflare / Vite endpoint:", data);
+      }
     } catch (err) {
       console.error("Could not trigger /api/send-email:", err);
     }
@@ -130,6 +135,7 @@ class EmailService {
 
     return {
       success: true,
+      emailSent,
       messageId: newMessage.id,
       sentTo: recipients
     };
