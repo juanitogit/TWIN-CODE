@@ -3,49 +3,40 @@ import React from 'react';
 export default function ProjectCard({ project, index = 0, onOpenDetail }) {
   const fallbackImg = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80";
 
-  // Symmetrical curve tilt: cards on the left tilt left, center stays flat, right tilts right
-  // Pattern based on index or position in carousel
-  const angles = [-3, -1.5, 0, 1.5, 3];
-  const angle = angles[index % angles.length];
-
   return (
     <article
       onClick={() => onOpenDetail(project)}
-      className="google-labs-card"
+      className="labs-card"
       style={{
         backgroundColor: '#ffffff',
-        borderRadius: '24px',
-        padding: '16px 16px 20px 16px',
-        width: '320px',
-        minWidth: '320px',
-        height: '460px',
+        borderRadius: '20px',
+        overflow: 'hidden',
+        width: '310px',
+        minWidth: '310px',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
         cursor: 'pointer',
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
-        transform: `rotate(${angle}deg)`,
-        transition: 'transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.3s ease',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.08), 0 8px 40px rgba(0,0,0,0.06)',
+        border: '1px solid rgba(0,0,0,0.06)',
+        transition: 'transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.35s ease',
         userSelect: 'none',
         flexShrink: 0
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.transform = 'rotate(0deg) translateY(-8px)';
-        e.currentTarget.style.boxShadow = '0 20px 45px rgba(0, 0, 0, 0.4)';
+        e.currentTarget.style.transform = 'translateY(-6px)';
+        e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.14), 0 20px 60px rgba(0,0,0,0.1)';
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.transform = `rotate(${angle}deg)`;
-        e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.25)';
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08), 0 8px 40px rgba(0,0,0,0.06)';
       }}
     >
-      {/* Top Image (Clean Rounded Container like Google Labs) */}
+      {/* Image - takes the majority of the card like Google Labs */}
       <div style={{
         width: '100%',
-        height: '240px',
-        borderRadius: '18px',
+        height: '320px',
         overflow: 'hidden',
-        backgroundColor: '#f2f2f4',
-        marginBottom: '16px',
+        backgroundColor: '#f0f0f2',
         flexShrink: 0
       }}>
         <img
@@ -64,63 +55,54 @@ export default function ProjectCard({ project, index = 0, onOpenDetail }) {
         />
       </div>
 
-      {/* Card Content */}
+      {/* Text Content - clean and minimal like Google Labs */}
       <div style={{
+        padding: '20px 20px 24px 20px',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        flexGrow: 1
+        gap: '8px'
       }}>
-        <div>
-          {/* Title */}
-          <h3 style={{
-            fontSize: '18px',
-            fontWeight: 600,
-            lineHeight: '1.3',
-            color: '#111111',
-            letterSpacing: '-0.02em',
-            marginBottom: '8px',
-            height: '46px',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            fontFamily: 'var(--font-sf)'
-          }}>
-            {project.title}
-          </h3>
-
-          {/* Description */}
-          <p style={{
-            fontSize: '13px',
-            lineHeight: '1.5',
-            color: '#555555',
-            height: '40px',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden'
-          }}>
-            {project.description}
-          </p>
-        </div>
-
-        {/* Action text */}
-        <div style={{
-          paddingTop: '12px',
-          display: 'flex',
-          alignItems: 'center'
+        {/* Title */}
+        <h3 style={{
+          fontSize: '17px',
+          fontWeight: 600,
+          lineHeight: '1.3',
+          color: '#1a1a1a',
+          letterSpacing: '-0.01em',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          margin: 0
         }}>
+          {project.title}
+        </h3>
+
+        {/* Description */}
+        <p style={{
+          fontSize: '13px',
+          lineHeight: '1.5',
+          color: '#5f6368',
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          margin: 0
+        }}>
+          {project.description}
+        </p>
+
+        {/* Learn More link */}
+        <div style={{ paddingTop: '8px' }}>
           <span style={{
-            fontSize: '12px',
+            fontSize: '13px',
             fontWeight: 500,
-            color: '#111111',
+            color: '#1a1a1a',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '4px'
           }}>
-            <span>Ver más</span>
-            <span style={{ fontSize: '13px' }}>→</span>
+            Ver más <span style={{ fontSize: '14px' }}>→</span>
           </span>
         </div>
       </div>

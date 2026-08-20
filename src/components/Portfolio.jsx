@@ -9,7 +9,6 @@ export default function Portfolio({ projects }) {
 
   const carouselRef = useRef(null);
 
-  // Extract unique categories
   const categories = useMemo(() => {
     const set = new Set(['Todos']);
     projects.forEach(p => {
@@ -21,7 +20,6 @@ export default function Portfolio({ projects }) {
     return Array.from(set);
   }, [projects]);
 
-  // Filter projects
   const filteredProjects = useMemo(() => {
     if (selectedCategory === 'Todos') return projects;
     return projects.filter(p => p.category && p.category.toLowerCase().includes(selectedCategory.toLowerCase()));
@@ -29,7 +27,7 @@ export default function Portfolio({ projects }) {
 
   const scrollCarousel = (direction) => {
     if (carouselRef.current) {
-      const scrollAmount = direction === 'left' ? -360 : 360;
+      const scrollAmount = direction === 'left' ? -340 : 340;
       carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
@@ -41,13 +39,72 @@ export default function Portfolio({ projects }) {
         position: 'relative',
         paddingTop: '88px',
         paddingBottom: '96px',
-        borderBottom: '1px solid var(--color-border-subtle)',
-        backgroundColor: '#000000',
+        /* Light warm background like Google Labs */
+        backgroundColor: '#f0ece4',
         overflow: 'hidden'
       }}
     >
-      <div className="container">
-        {/* Clean Original Section Header */}
+      {/* ===== COLORFUL BLOB SHAPES (Google Labs background) ===== */}
+      {/* Large green blob top-right */}
+      <div style={{
+        position: 'absolute',
+        top: '-80px',
+        right: '-60px',
+        width: '500px',
+        height: '500px',
+        borderRadius: '40% 60% 55% 45% / 55% 40% 60% 45%',
+        background: '#34a853',
+        opacity: 0.75,
+        pointerEvents: 'none',
+        zIndex: 1
+      }} />
+
+      {/* Blue geometric shape bottom-left */}
+      <div style={{
+        position: 'absolute',
+        bottom: '40px',
+        left: '-40px',
+        width: '220px',
+        height: '300px',
+        background: '#4285f4',
+        opacity: 0.7,
+        transform: 'rotate(-15deg)',
+        borderRadius: '8px',
+        pointerEvents: 'none',
+        zIndex: 1
+      }} />
+
+      {/* Pink/red accent top-left */}
+      <div style={{
+        position: 'absolute',
+        top: '20px',
+        right: '25%',
+        width: '180px',
+        height: '60px',
+        background: '#ea4335',
+        opacity: 0.65,
+        borderRadius: '30px',
+        transform: 'rotate(-8deg)',
+        pointerEvents: 'none',
+        zIndex: 1
+      }} />
+
+      {/* Small yellow accent */}
+      <div style={{
+        position: 'absolute',
+        bottom: '120px',
+        right: '15%',
+        width: '120px',
+        height: '120px',
+        background: '#fbbc04',
+        opacity: 0.5,
+        borderRadius: '50%',
+        pointerEvents: 'none',
+        zIndex: 1
+      }} />
+
+      <div className="container" style={{ position: 'relative', zIndex: 10 }}>
+        {/* Section Header */}
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
@@ -57,26 +114,26 @@ export default function Portfolio({ projects }) {
           marginBottom: '32px'
         }}>
           <div>
-            <span className="apple-section-label" style={{ display: 'block', marginBottom: '8px' }}>
+            <span style={{
+              display: 'block',
+              marginBottom: '8px',
+              fontSize: '12px',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              color: '#5f6368'
+            }}>
               Portafolio de Soluciones ({filteredProjects.length})
             </span>
             <h2 style={{
               fontSize: 'var(--text-heading)',
               lineHeight: '1.15',
-              color: '#f5f5f7',
+              color: '#1a1a1a',
               fontWeight: 500
             }}>
               Sistemas digitales y automatizaciones en producción.
             </h2>
           </div>
-
-          <span style={{
-            fontSize: '13px',
-            color: 'var(--color-smoke)',
-            letterSpacing: '-0.01em'
-          }}>
-            Desliza para explorar los desarrollos
-          </span>
         </div>
 
         {/* Category Filters */}
@@ -87,7 +144,7 @@ export default function Portfolio({ projects }) {
             gap: '8px',
             marginBottom: '40px',
             paddingBottom: '16px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+            borderBottom: '1px solid rgba(0, 0, 0, 0.08)'
           }}>
             {categories.map((cat) => (
               <button
@@ -97,12 +154,12 @@ export default function Portfolio({ projects }) {
                   fontSize: '12px',
                   fontWeight: 500,
                   padding: '6px 14px',
-                  borderRadius: 'var(--radius-apple-sm)',
+                  borderRadius: '20px',
                   letterSpacing: '-0.01em',
                   transition: 'all 0.2s ease',
-                  backgroundColor: selectedCategory === cat ? '#ffffff' : 'rgba(255, 255, 255, 0.04)',
-                  color: selectedCategory === cat ? '#000000' : 'var(--color-smoke)',
-                  border: selectedCategory === cat ? '1px solid #ffffff' : '1px solid var(--color-border-subtle)'
+                  backgroundColor: selectedCategory === cat ? '#1a1a1a' : 'rgba(0, 0, 0, 0.04)',
+                  color: selectedCategory === cat ? '#ffffff' : '#5f6368',
+                  border: selectedCategory === cat ? '1px solid #1a1a1a' : '1px solid rgba(0, 0, 0, 0.12)'
                 }}
               >
                 {cat}
@@ -111,16 +168,16 @@ export default function Portfolio({ projects }) {
           </div>
         )}
 
-        {/* Google Labs Horizontal Curved Carousel */}
+        {/* Horizontal Scrolling Cards */}
         {filteredProjects.length === 0 ? (
           <div style={{
             textAlign: 'center',
             padding: '60px 20px',
-            borderRadius: 'var(--radius-apple-md)',
-            backgroundColor: '#0a0a0c',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
+            borderRadius: '20px',
+            backgroundColor: '#ffffff',
+            border: '1px solid rgba(0, 0, 0, 0.08)'
           }}>
-            <p style={{ color: 'var(--color-smoke)' }}>No hay proyectos en esta categoría.</p>
+            <p style={{ color: '#5f6368' }}>No hay proyectos en esta categoría.</p>
           </div>
         ) : (
           <div>
@@ -128,12 +185,12 @@ export default function Portfolio({ projects }) {
               ref={carouselRef}
               style={{
                 display: 'flex',
-                gap: '28px',
+                gap: '24px',
                 overflowX: 'auto',
-                paddingTop: '20px',
-                paddingBottom: '32px',
-                paddingLeft: '16px',
-                paddingRight: '16px',
+                paddingTop: '8px',
+                paddingBottom: '24px',
+                paddingLeft: '4px',
+                paddingRight: '4px',
                 scrollSnapType: 'x mandatory',
                 WebkitOverflowScrolling: 'touch',
                 scrollbarWidth: 'none',
@@ -152,37 +209,35 @@ export default function Portfolio({ projects }) {
               ))}
             </div>
 
-            {/* Bottom Centered Carousel Navigation Controls (< >) */}
+            {/* Bottom centered arrows like Google Labs */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '12px',
-              marginTop: '16px'
+              marginTop: '24px'
             }}>
               <button
                 onClick={() => scrollCarousel('left')}
-                title="Anterior"
                 style={{
-                  width: '42px',
-                  height: '42px',
+                  width: '44px',
+                  height: '44px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#ffffff',
+                  backgroundColor: '#ffffff',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  color: '#1a1a1a',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseOver={e => {
-                  e.currentTarget.style.backgroundColor = '#ffffff';
-                  e.currentTarget.style.color = '#000000';
+                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)';
                 }}
                 onMouseOut={e => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                  e.currentTarget.style.color = '#ffffff';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
                 }}
               >
                 <ChevronLeft size={20} />
@@ -190,27 +245,25 @@ export default function Portfolio({ projects }) {
 
               <button
                 onClick={() => scrollCarousel('right')}
-                title="Siguiente"
                 style={{
-                  width: '42px',
-                  height: '42px',
+                  width: '44px',
+                  height: '44px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#ffffff',
+                  backgroundColor: '#ffffff',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  color: '#1a1a1a',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                   transition: 'all 0.2s ease'
                 }}
                 onMouseOver={e => {
-                  e.currentTarget.style.backgroundColor = '#ffffff';
-                  e.currentTarget.style.color = '#000000';
+                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)';
                 }}
                 onMouseOut={e => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
-                  e.currentTarget.style.color = '#ffffff';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
                 }}
               >
                 <ChevronRight size={20} />
