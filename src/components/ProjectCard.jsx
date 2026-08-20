@@ -29,7 +29,6 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
     const container = containerRef?.current;
     if (!container) return;
 
-    // Use MutationObserver-friendly approach: poll on animation frame
     let rafId;
     const tick = () => {
       updateTransform();
@@ -48,7 +47,7 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
         onOpenDetail(project);
       }}
       style={{
-        backgroundColor: '#ffffff',
+        backgroundColor: '#111113',
         borderRadius: '20px',
         overflow: 'hidden',
         width: '340px',
@@ -56,18 +55,20 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
         display: 'flex',
         flexDirection: 'column',
         cursor: 'pointer',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.08), 0 8px 40px rgba(0,0,0,0.06)',
-        border: '1px solid rgba(0,0,0,0.06)',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.4), 0 8px 48px rgba(0,0,0,0.3)',
+        border: '1px solid rgba(255,255,255,0.1)',
         transition: 'box-shadow 0.3s ease',
         userSelect: 'none',
         flexShrink: 0,
         willChange: 'transform'
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = '0 16px 50px rgba(0,0,0,0.16), 0 24px 70px rgba(0,0,0,0.1)';
+        e.currentTarget.style.boxShadow = '0 16px 50px rgba(0,0,0,0.5), 0 24px 70px rgba(0,0,0,0.4)';
+        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08), 0 8px 40px rgba(0,0,0,0.06)';
+        e.currentTarget.style.boxShadow = '0 4px 24px rgba(0,0,0,0.4), 0 8px 48px rgba(0,0,0,0.3)';
+        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
       }}
     >
       {/* Image */}
@@ -75,7 +76,7 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
         width: '100%',
         height: '340px',
         overflow: 'hidden',
-        backgroundColor: '#f0f0f2',
+        backgroundColor: '#1c1c1e',
         flexShrink: 0
       }}>
         <img
@@ -103,7 +104,7 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
           fontSize: '16px',
           fontWeight: 600,
           lineHeight: '1.3',
-          color: '#1a1a1a',
+          color: '#f5f5f7',
           letterSpacing: '-0.01em',
           display: '-webkit-box',
           WebkitLineClamp: 2,
@@ -117,7 +118,7 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
         <p style={{
           fontSize: '13px',
           lineHeight: '1.5',
-          color: '#5f6368',
+          color: '#a1a1a6',
           display: '-webkit-box',
           WebkitLineClamp: 2,
           WebkitBoxOrient: 'vertical',
@@ -131,7 +132,7 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
           <span style={{
             fontSize: '13px',
             fontWeight: 500,
-            color: '#1a1a1a',
+            color: '#f5f5f7',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '4px'
