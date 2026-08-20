@@ -34,7 +34,7 @@ export default function Portfolio({ projects }) {
     if (!track || filteredProjects.length === 0) return;
 
     let rafId;
-    const speed = 0.5;
+    const speed = 1.5;
 
     const animate = () => {
       if (!isPaused && !isDragging.current) {
@@ -91,57 +91,7 @@ export default function Portfolio({ projects }) {
         overflow: 'hidden'
       }}
     >
-      {/* Colorful background blobs */}
-      <div style={{
-        position: 'absolute',
-        top: '-80px',
-        right: '-60px',
-        width: '500px',
-        height: '500px',
-        borderRadius: '40% 60% 55% 45% / 55% 40% 60% 45%',
-        background: '#34a853',
-        opacity: 0.55,
-        pointerEvents: 'none',
-        zIndex: 1
-      }} />
-      <div style={{
-        position: 'absolute',
-        bottom: '40px',
-        left: '-40px',
-        width: '220px',
-        height: '300px',
-        background: '#4285f4',
-        opacity: 0.5,
-        transform: 'rotate(-15deg)',
-        borderRadius: '8px',
-        pointerEvents: 'none',
-        zIndex: 1
-      }} />
-      <div style={{
-        position: 'absolute',
-        top: '20px',
-        right: '25%',
-        width: '180px',
-        height: '60px',
-        background: '#ea4335',
-        opacity: 0.45,
-        borderRadius: '30px',
-        transform: 'rotate(-8deg)',
-        pointerEvents: 'none',
-        zIndex: 1
-      }} />
-      <div style={{
-        position: 'absolute',
-        bottom: '120px',
-        right: '15%',
-        width: '120px',
-        height: '120px',
-        background: '#fbbc04',
-        opacity: 0.35,
-        borderRadius: '50%',
-        pointerEvents: 'none',
-        zIndex: 1
-      }} />
+
 
       <div style={{ position: 'relative', zIndex: 10 }}>
         {/* Header */}
