@@ -34,7 +34,7 @@ export default function Portfolio({ projects }) {
     if (!track || filteredProjects.length === 0) return;
 
     let rafId;
-    const speed = 1.5;
+    const speed = window.innerWidth < 768 ? 1.5 : 0.5;
 
     const animate = () => {
       if (!isPaused && !isDragging.current) {
