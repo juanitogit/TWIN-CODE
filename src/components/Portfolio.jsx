@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
 
@@ -8,6 +8,9 @@ export default function Portfolio({ projects }) {
   const [isPaused, setIsPaused] = useState(false);
 
   const trackRef = useRef(null);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const scrollStartX = useRef(0);
 
   const categories = useMemo(() => {
     const set = new Set(['Todos']);
@@ -25,19 +28,17 @@ export default function Portfolio({ projects }) {
     return projects.filter(p => p.category && p.category.toLowerCase().includes(selectedCategory.toLowerCase()));
   }, [projects, selectedCategory]);
 
-  // Auto-scroll: slowly scroll the carousel to the right continuously
+  // Auto-scroll
   useEffect(() => {
     const track = trackRef.current;
     if (!track || filteredProjects.length === 0) return;
 
     let rafId;
-    const speed = 0.5; // pixels per frame (~30px/sec at 60fps)
+    const speed = 0.5;
 
     const animate = () => {
-      if (!isPaused) {
+      if (!isPaused && !isDragging.current) {
         track.scrollLeft += speed;
-
-        // Seamless loop: when we've scrolled past the original set, jump back
         const halfScroll = track.scrollWidth / 2;
         if (track.scrollLeft >= halfScroll) {
           track.scrollLeft -= halfScroll;
@@ -50,7 +51,30 @@ export default function Portfolio({ projects }) {
     return () => cancelAnimationFrame(rafId);
   }, [isPaused, filteredProjects]);
 
-  // Duplicate projects for seamless infinite loop
+  // ===== DRAG / TOUCH GESTURES =====
+  const handlePointerDown = useCallback((e) => {
+    isDragging.current = true;
+    dragStartX.current = e.clientX || e.touches?.[0]?.clientX || 0;
+    scrollStartX.current = trackRef.current?.scrollLeft || 0;
+    setIsPaused(true);
+  }, []);
+
+  const handlePointerMove = useCallback((e) => {
+    if (!isDragging.current || !trackRef.current) return;
+    const x = e.clientX || e.touches?.[0]?.clientX || 0;
+    const delta = dragStartX.current - x;
+    trackRef.current.scrollLeft = scrollStartX.current + delta;
+  }, []);
+
+  const handlePointerUp = useCallback(() => {
+    isDragging.current = false;
+    // Resume auto-scroll after 2s
+    setTimeout(() => {
+      if (!isDragging.current) setIsPaused(false);
+    }, 2000);
+  }, []);
+
+  // Duplicate for infinite loop
   const loopedProjects = useMemo(() => {
     if (filteredProjects.length === 0) return [];
     return [...filteredProjects, ...filteredProjects];
@@ -63,11 +87,11 @@ export default function Portfolio({ projects }) {
         position: 'relative',
         paddingTop: '88px',
         paddingBottom: '96px',
-        backgroundColor: '#f0ece4',
+        backgroundColor: '#000000',
         overflow: 'hidden'
       }}
     >
-      {/* Background color blobs */}
+      {/* Colorful background blobs */}
       <div style={{
         position: 'absolute',
         top: '-80px',
@@ -76,7 +100,7 @@ export default function Portfolio({ projects }) {
         height: '500px',
         borderRadius: '40% 60% 55% 45% / 55% 40% 60% 45%',
         background: '#34a853',
-        opacity: 0.75,
+        opacity: 0.55,
         pointerEvents: 'none',
         zIndex: 1
       }} />
@@ -87,7 +111,7 @@ export default function Portfolio({ projects }) {
         width: '220px',
         height: '300px',
         background: '#4285f4',
-        opacity: 0.7,
+        opacity: 0.5,
         transform: 'rotate(-15deg)',
         borderRadius: '8px',
         pointerEvents: 'none',
@@ -100,7 +124,7 @@ export default function Portfolio({ projects }) {
         width: '180px',
         height: '60px',
         background: '#ea4335',
-        opacity: 0.65,
+        opacity: 0.45,
         borderRadius: '30px',
         transform: 'rotate(-8deg)',
         pointerEvents: 'none',
@@ -113,14 +137,14 @@ export default function Portfolio({ projects }) {
         width: '120px',
         height: '120px',
         background: '#fbbc04',
-        opacity: 0.5,
+        opacity: 0.35,
         borderRadius: '50%',
         pointerEvents: 'none',
         zIndex: 1
       }} />
 
       <div style={{ position: 'relative', zIndex: 10 }}>
-        {/* Header inside container */}
+        {/* Header */}
         <div className="container">
           <div style={{
             display: 'flex',
@@ -131,21 +155,13 @@ export default function Portfolio({ projects }) {
             marginBottom: '32px'
           }}>
             <div>
-              <span style={{
-                display: 'block',
-                marginBottom: '8px',
-                fontSize: '12px',
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                color: '#5f6368'
-              }}>
+              <span className="apple-section-label" style={{ display: 'block', marginBottom: '8px' }}>
                 Portafolio de Soluciones ({filteredProjects.length})
               </span>
               <h2 style={{
                 fontSize: 'var(--text-heading)',
                 lineHeight: '1.15',
-                color: '#1a1a1a',
+                color: '#f5f5f7',
                 fontWeight: 500
               }}>
                 Sistemas digitales y automatizaciones en producción.
@@ -161,7 +177,7 @@ export default function Portfolio({ projects }) {
               gap: '8px',
               marginBottom: '40px',
               paddingBottom: '16px',
-              borderBottom: '1px solid rgba(0, 0, 0, 0.08)'
+              borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
             }}>
               {categories.map((cat) => (
                 <button
@@ -174,9 +190,9 @@ export default function Portfolio({ projects }) {
                     borderRadius: '20px',
                     letterSpacing: '-0.01em',
                     transition: 'all 0.2s ease',
-                    backgroundColor: selectedCategory === cat ? '#1a1a1a' : 'rgba(0, 0, 0, 0.04)',
-                    color: selectedCategory === cat ? '#ffffff' : '#5f6368',
-                    border: selectedCategory === cat ? '1px solid #1a1a1a' : '1px solid rgba(0, 0, 0, 0.12)'
+                    backgroundColor: selectedCategory === cat ? '#ffffff' : 'rgba(255, 255, 255, 0.04)',
+                    color: selectedCategory === cat ? '#000000' : 'var(--color-smoke)',
+                    border: selectedCategory === cat ? '1px solid #ffffff' : '1px solid rgba(255, 255, 255, 0.12)'
                   }}
                 >
                   {cat}
@@ -186,44 +202,56 @@ export default function Portfolio({ projects }) {
           )}
         </div>
 
-        {/* FULL-WIDTH auto-scrolling carousel — NO container constraint */}
+        {/* FULL-WIDTH auto-scrolling + draggable carousel */}
         {filteredProjects.length === 0 ? (
           <div className="container">
             <div style={{
               textAlign: 'center',
               padding: '60px 20px',
               borderRadius: '20px',
-              backgroundColor: '#ffffff',
-              border: '1px solid rgba(0, 0, 0, 0.08)'
+              backgroundColor: '#0a0a0c',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
             }}>
-              <p style={{ color: '#5f6368' }}>No hay proyectos en esta categoría.</p>
+              <p style={{ color: 'var(--color-smoke)' }}>No hay proyectos en esta categoría.</p>
             </div>
           </div>
         ) : (
           <div
             ref={trackRef}
             onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
+            onMouseLeave={() => { setIsPaused(false); isDragging.current = false; }}
+            onMouseDown={handlePointerDown}
+            onMouseMove={handlePointerMove}
+            onMouseUp={handlePointerUp}
+            onTouchStart={handlePointerDown}
+            onTouchMove={handlePointerMove}
+            onTouchEnd={handlePointerUp}
             style={{
               display: 'flex',
               gap: '28px',
-              overflowX: 'hidden',
+              overflowX: 'auto',
               paddingTop: '40px',
               paddingBottom: '60px',
               paddingLeft: '24px',
               paddingRight: '24px',
               alignItems: 'flex-start',
               width: '100%',
+              cursor: 'grab',
               scrollbarWidth: 'none',
-              msOverflowStyle: 'none'
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch',
+              userSelect: 'none'
             }}
+            className="hide-scrollbar"
           >
             {loopedProjects.map((project, i) => (
               <ProjectCard
                 key={`${project.id}-${i}`}
                 project={project}
                 containerRef={trackRef}
-                onOpenDetail={(p) => setActiveProjectModal(p)}
+                onOpenDetail={(p) => {
+                  if (!isDragging.current) setActiveProjectModal(p);
+                }}
               />
             ))}
           </div>
@@ -237,6 +265,12 @@ export default function Portfolio({ projects }) {
           onClose={() => setActiveProjectModal(null)}
         />
       )}
+
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </section>
   );
 }
