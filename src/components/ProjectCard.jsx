@@ -1,24 +1,60 @@
-import React from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 
-export default function ProjectCard({ project, index = 0, totalCards = 1, onOpenDetail }) {
+export default function ProjectCard({ project, onOpenDetail, containerRef }) {
   const fallbackImg = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80";
+  const cardRef = useRef(null);
 
-  // ===== ARC / FAN rotation =====
-  // Calculate rotation so cards fan out from center like a circular carousel.
-  // Center card = 0°, left cards tilt left (negative), right cards tilt right (positive).
-  const center = (totalCards - 1) / 2;
-  const offset = index - center;
-  // Max ±4° at the edges
-  const maxAngle = 4;
-  const rotation = totalCards > 1
-    ? (offset / Math.max(center, 1)) * maxAngle
-    : 0;
+  // Dynamic arc transform based on position relative to viewport center
+  const updateTransform = useCallback(() => {
+    const card = cardRef.current;
+    const container = containerRef?.current;
+    if (!card || !container) return;
 
-  // Slight vertical offset to reinforce the arc — center cards sit higher
-  const yShift = Math.abs(offset) * 12;
+    const containerRect = container.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+
+    // Center X of the visible carousel area
+    const viewCenterX = containerRect.left + containerRect.width / 2;
+    // Center X of this card
+    const cardCenterX = cardRect.left + cardRect.width / 2;
+
+    // Normalized offset: -1 (far left) to +1 (far right)
+    const maxOffset = containerRect.width / 2;
+    const normalizedOffset = Math.max(-1, Math.min(1, (cardCenterX - viewCenterX) / maxOffset));
+
+    // Rotation: cards at edges rotate ±5°, center = 0°
+    const rotation = normalizedOffset * 5;
+
+    // Vertical shift: parabolic curve — edges drop down, center stays up
+    // Using x² parabola so center = 0 shift, edges = max shift
+    const yShift = normalizedOffset * normalizedOffset * 40;
+
+    // Slight scale: center cards slightly larger
+    const scale = 1 - Math.abs(normalizedOffset) * 0.03;
+
+    card.style.transform = `rotate(${rotation}deg) translateY(${yShift}px) scale(${scale})`;
+  }, [containerRef]);
+
+  useEffect(() => {
+    const container = containerRef?.current;
+    if (!container) return;
+
+    // Update on scroll
+    container.addEventListener('scroll', updateTransform, { passive: true });
+    // Update on resize
+    window.addEventListener('resize', updateTransform, { passive: true });
+    // Initial position
+    requestAnimationFrame(updateTransform);
+
+    return () => {
+      container.removeEventListener('scroll', updateTransform);
+      window.removeEventListener('resize', updateTransform);
+    };
+  }, [containerRef, updateTransform]);
 
   return (
     <article
+      ref={cardRef}
       onClick={() => onOpenDetail(project)}
       style={{
         backgroundColor: '#ffffff',
@@ -31,21 +67,19 @@ export default function ProjectCard({ project, index = 0, totalCards = 1, onOpen
         cursor: 'pointer',
         boxShadow: '0 4px 20px rgba(0,0,0,0.08), 0 8px 40px rgba(0,0,0,0.06)',
         border: '1px solid rgba(0,0,0,0.06)',
-        transform: `rotate(${rotation}deg) translateY(${yShift}px)`,
-        transition: 'transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s ease',
+        transition: 'box-shadow 0.3s ease',
         userSelect: 'none',
-        flexShrink: 0
+        flexShrink: 0,
+        willChange: 'transform'
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.transform = 'rotate(0deg) translateY(-8px)';
         e.currentTarget.style.boxShadow = '0 16px 50px rgba(0,0,0,0.16), 0 24px 70px rgba(0,0,0,0.1)';
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.transform = `rotate(${rotation}deg) translateY(${yShift}px)`;
         e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08), 0 8px 40px rgba(0,0,0,0.06)';
       }}
     >
-      {/* Image — takes most of the card */}
+      {/* Image */}
       <div style={{
         width: '100%',
         height: '320px',
@@ -67,7 +101,7 @@ export default function ProjectCard({ project, index = 0, totalCards = 1, onOpen
         />
       </div>
 
-      {/* Text content */}
+      {/* Text */}
       <div style={{
         padding: '20px 20px 24px 20px',
         display: 'flex',

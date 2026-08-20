@@ -199,12 +199,11 @@ export default function Portfolio({ projects }) {
               }}
               className="hide-scrollbar"
             >
-              {filteredProjects.map((project, index) => (
+              {filteredProjects.map((project) => (
                 <div key={project.id} style={{ scrollSnapAlign: 'start' }}>
                   <ProjectCard
                     project={project}
-                    index={index}
-                    totalCards={filteredProjects.length}
+                    containerRef={carouselRef}
                     onOpenDetail={(p) => setActiveProjectModal(p)}
                   />
                 </div>
