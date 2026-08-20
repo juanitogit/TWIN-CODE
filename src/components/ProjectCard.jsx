@@ -1,37 +1,53 @@
-import React from 'react';
-import { ExternalLink, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ExternalLink, ArrowUpRight, Sparkles } from 'lucide-react';
 
-export default function ProjectCard({ project, onOpenDetail }) {
+const ROTATIONS = ['-2.5deg', '1.8deg', '-1.5deg', '2.5deg', '-3deg', '2deg', '0deg', '-2deg'];
+
+export default function ProjectCard({ project, index = 0, onOpenDetail }) {
+  const [isHovered, setIsHovered] = useState(false);
   const fallbackImg = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80";
 
+  // Deterministic tilt angle based on index
+  const defaultRotation = ROTATIONS[index % ROTATIONS.length];
+
   return (
-    <article
-      className="interactive-card"
+    <div
+      onClick={() => onOpenDetail(project)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
-        border: '1px solid rgba(255, 255, 255, 0.14)',
-        borderRadius: 'var(--radius-apple-md)',
-        backgroundColor: '#0a0a0c',
-        overflow: 'hidden',
+        transform: isHovered ? 'rotate(0deg) scale(1.03) translateY(-10px)' : `rotate(${defaultRotation})`,
+        transition: 'transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 0.4s ease, border-color 0.4s ease',
+        cursor: 'pointer',
+        backgroundColor: '#ffffff',
+        borderRadius: '30px',
+        padding: '16px 16px 22px 16px',
+        boxShadow: isHovered
+          ? '0 28px 60px rgba(0, 0, 0, 0.45), 0 0 24px rgba(255, 255, 255, 0.2)'
+          : '0 12px 32px rgba(0, 0, 0, 0.3)',
+        border: '1px solid rgba(255, 255, 255, 0.8)',
         display: 'flex',
         flexDirection: 'column',
-        height: '490px',
-        position: 'relative'
+        width: '100%',
+        minWidth: '290px',
+        maxWidth: '360px',
+        height: '470px',
+        position: 'relative',
+        userSelect: 'none',
+        flexShrink: 0
       }}
     >
-      {/* Project Image Preview (Fixed 200px height) */}
-      <div
-        onClick={() => onOpenDetail(project)}
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: '200px',
-          backgroundColor: '#111113',
-          overflow: 'hidden',
-          borderBottom: '1px solid var(--color-border-subtle)',
-          cursor: 'pointer',
-          flexShrink: 0
-        }}
-      >
+      {/* Framed Image (Google Labs Rounded Container) */}
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        height: '260px',
+        borderRadius: '22px',
+        overflow: 'hidden',
+        backgroundColor: '#f0f0f2',
+        marginBottom: '16px',
+        boxShadow: 'inset 0 0 0 1px rgba(0, 0, 0, 0.06)'
+      }}>
         <img
           src={project.imageUrl || fallbackImg}
           alt={project.title}
@@ -40,122 +56,115 @@ export default function ProjectCard({ project, onOpenDetail }) {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            transition: 'transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)'
+            transition: 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)',
+            transform: isHovered ? 'scale(1.06)' : 'scale(1)'
           }}
           onError={(e) => {
             e.currentTarget.src = fallbackImg;
           }}
-          onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
-          onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
         />
 
-        {/* Live URL Badge if available */}
+        {/* Top Badges (Google Labs experiment pill) */}
+        <div style={{
+          position: 'absolute',
+          top: '12px',
+          left: '12px',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '5px',
+          backgroundColor: 'rgba(255, 255, 255, 0.92)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          borderRadius: '100px',
+          padding: '4px 10px',
+          fontSize: '11px',
+          fontWeight: 600,
+          color: '#1d1d1f',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <Sparkles size={11} style={{ color: '#c6a972' }} />
+          <span>{project.year || '2026'}</span>
+        </div>
+
         {project.liveUrl && (
           <a
             href={project.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            title="Ver sitio web en vivo"
+            title="Abrir web en vivo"
             style={{
               position: 'absolute',
-              top: '10px',
-              right: '10px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '5px',
-              backgroundColor: 'rgba(0, 0, 0, 0.82)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              top: '12px',
+              right: '12px',
+              backgroundColor: '#000000',
               color: '#ffffff',
-              borderRadius: 'var(--radius-apple-sm)',
-              padding: '5px 10px',
+              borderRadius: '100px',
+              padding: '5px 11px',
               fontSize: '11px',
               fontWeight: 500,
-              letterSpacing: '-0.01em',
-              transition: 'all 0.2s ease',
-              zIndex: 5
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+              transition: 'transform 0.2s ease, background-color 0.2s ease'
             }}
-            onMouseOver={e => {
-              e.currentTarget.style.backgroundColor = '#ffffff';
-              e.currentTarget.style.color = '#000000';
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.82)';
-              e.currentTarget.style.color = '#ffffff';
-            }}
+            onMouseOver={e => e.currentTarget.style.backgroundColor = '#1d1d1f'}
+            onMouseOut={e => e.currentTarget.style.backgroundColor = '#000000'}
           >
-            <span>Ver web</span>
+            <span>Web</span>
             <ExternalLink size={11} />
           </a>
         )}
       </div>
 
-      {/* Project Content */}
+      {/* Card Body with Clean Editorial Typography */}
       <div style={{
-        padding: '20px',
         display: 'flex',
         flexDirection: 'column',
-        flexGrow: 1,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        flexGrow: 1
       }}>
         <div>
-          {/* Category & Year */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '8px'
+          {/* Category Pill */}
+          <span style={{
+            fontSize: '11px',
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            color: '#86868b',
+            display: 'block',
+            marginBottom: '6px'
           }}>
-            <span style={{
-              fontSize: '11px',
-              color: 'var(--color-compass-gold)',
-              fontWeight: 500
-            }}>
-              {project.category || "Software a Medida"}
-            </span>
-            {project.year && (
-              <span style={{
-                fontSize: '11px',
-                color: 'var(--color-smoke)'
-              }}>
-                {project.year}
-              </span>
-            )}
-          </div>
+            {project.category || 'Experimento Digital'}
+          </span>
 
-          {/* Project Title (Fixed 2 lines height) */}
-          <h3
-            onClick={() => onOpenDetail(project)}
-            style={{
-              fontSize: '16px',
-              lineHeight: '1.3',
-              color: '#ffffff',
-              fontWeight: 600,
-              marginBottom: '8px',
-              height: '42px',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-              cursor: 'pointer'
-            }}
-            onMouseOver={e => e.currentTarget.style.color = 'var(--color-compass-gold)'}
-            onMouseOut={e => e.currentTarget.style.color = '#ffffff'}
-          >
+          {/* Project Title (Bold Google Labs Look) */}
+          <h3 style={{
+            fontSize: '19px',
+            fontWeight: 700,
+            lineHeight: '1.25',
+            color: '#111111',
+            letterSpacing: '-0.02em',
+            marginBottom: '8px',
+            height: '48px',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            fontFamily: 'var(--font-sf)'
+          }}>
             {project.title}
           </h3>
 
-          {/* Project Description (Fixed 3 lines height) */}
+          {/* Description snippet */}
           <p style={{
             fontSize: '13px',
-            lineHeight: '1.5',
-            color: '#b0b0b5',
-            marginBottom: '12px',
-            height: '58px',
+            lineHeight: '1.45',
+            color: '#515154',
+            height: '38px',
             display: '-webkit-box',
-            WebkitLineClamp: 3,
+            WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden'
           }}>
@@ -163,91 +172,41 @@ export default function ProjectCard({ project, onOpenDetail }) {
           </p>
         </div>
 
-        {/* Tags and Bottom Actions */}
-        <div>
-          {/* Tags */}
-          {project.tags && project.tags.length > 0 && (
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '5px',
-              marginBottom: '14px',
-              height: '24px',
-              overflow: 'hidden'
-            }}>
-              {project.tags.slice(0, 3).map((tag, idx) => (
-                <span
-                  key={idx}
-                  style={{
-                    fontSize: '10px',
-                    padding: '2px 7px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: 'var(--radius-apple-sm)',
-                    color: '#e5e5ea'
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-              {project.tags.length > 3 && (
-                <span style={{ fontSize: '10px', color: 'var(--color-smoke)', alignSelf: 'center' }}>
-                  +{project.tags.length - 3}
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* Bottom Actions: Ver más button + Live URL */}
-          <div style={{
-            display: 'flex',
+        {/* Footer Actions */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingTop: '12px',
+          borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+          marginTop: '8px'
+        }}>
+          <span style={{
+            fontSize: '12px',
+            fontWeight: 600,
+            color: '#111111',
+            display: 'inline-flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingTop: '12px',
-            borderTop: '1px solid var(--color-border-subtle)'
+            gap: '4px'
           }}>
-            {/* Ver Más Button to open Modal */}
-            <button
-              type="button"
-              onClick={() => onOpenDetail(project)}
-              className="btn-graphite-outline"
-              style={{
-                padding: '5px 12px',
-                fontSize: '11px',
-                color: '#ffffff',
-                borderColor: 'rgba(255, 255, 255, 0.2)'
-              }}
-            >
-              <span>Ver más</span>
-              <ArrowRight size={12} />
-            </button>
+            <span>Ver detalles</span>
+            <ArrowUpRight size={13} style={{ transform: isHovered ? 'translate(2px, -2px)' : 'none', transition: 'transform 0.2s ease' }} />
+          </span>
 
-            {/* Direct Web link if exists */}
-            {project.liveUrl ? (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  fontSize: '12px',
-                  color: 'var(--color-compass-gold)',
-                  fontWeight: 500
-                }}
-              >
-                <span>Visitar</span>
-                <ExternalLink size={12} />
-              </a>
-            ) : (
-              <span style={{ fontSize: '11px', color: '#6e6e73' }}>
-                Sistema Privado
-              </span>
-            )}
-          </div>
+          {project.tags && project.tags.length > 0 && (
+            <span style={{
+              fontSize: '11px',
+              padding: '3px 9px',
+              borderRadius: '100px',
+              backgroundColor: 'rgba(0, 0, 0, 0.05)',
+              color: '#424245',
+              fontWeight: 500
+            }}>
+              {project.tags[0]}
+            </span>
+          )}
         </div>
       </div>
-    </article>
+    </div>
   );
 }
