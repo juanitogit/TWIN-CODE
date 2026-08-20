@@ -185,16 +185,17 @@ export default function Portfolio({ projects }) {
               ref={carouselRef}
               style={{
                 display: 'flex',
-                gap: '24px',
+                gap: '28px',
                 overflowX: 'auto',
-                paddingTop: '8px',
-                paddingBottom: '24px',
-                paddingLeft: '4px',
-                paddingRight: '4px',
+                paddingTop: '40px',
+                paddingBottom: '60px',
+                paddingLeft: '16px',
+                paddingRight: '16px',
                 scrollSnapType: 'x mandatory',
                 WebkitOverflowScrolling: 'touch',
                 scrollbarWidth: 'none',
-                msOverflowStyle: 'none'
+                msOverflowStyle: 'none',
+                alignItems: 'flex-start'
               }}
               className="hide-scrollbar"
             >
@@ -203,6 +204,7 @@ export default function Portfolio({ projects }) {
                   <ProjectCard
                     project={project}
                     index={index}
+                    totalCards={filteredProjects.length}
                     onOpenDetail={(p) => setActiveProjectModal(p)}
                   />
                 </div>
