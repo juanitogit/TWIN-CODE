@@ -4,7 +4,6 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
   const fallbackImg = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80";
   const cardRef = useRef(null);
 
-  // Dynamic arc transform based on position relative to viewport center
   const updateTransform = useCallback(() => {
     const card = cardRef.current;
     const container = containerRef?.current;
@@ -13,24 +12,15 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
     const containerRect = container.getBoundingClientRect();
     const cardRect = card.getBoundingClientRect();
 
-    // Center X of the visible carousel area
     const viewCenterX = containerRect.left + containerRect.width / 2;
-    // Center X of this card
     const cardCenterX = cardRect.left + cardRect.width / 2;
 
-    // Normalized offset: -1 (far left) to +1 (far right)
     const maxOffset = containerRect.width / 2;
     const normalizedOffset = Math.max(-1, Math.min(1, (cardCenterX - viewCenterX) / maxOffset));
 
-    // Rotation: cards at edges rotate ±5°, center = 0°
     const rotation = normalizedOffset * 5;
-
-    // Vertical shift: parabolic curve — edges drop down, center stays up
-    // Using x² parabola so center = 0 shift, edges = max shift
-    const yShift = normalizedOffset * normalizedOffset * 40;
-
-    // Slight scale: center cards slightly larger
-    const scale = 1 - Math.abs(normalizedOffset) * 0.03;
+    const yShift = normalizedOffset * normalizedOffset * 35;
+    const scale = 1 - Math.abs(normalizedOffset) * 0.04;
 
     card.style.transform = `rotate(${rotation}deg) translateY(${yShift}px) scale(${scale})`;
   }, [containerRef]);
@@ -39,29 +29,30 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
     const container = containerRef?.current;
     if (!container) return;
 
-    // Update on scroll
-    container.addEventListener('scroll', updateTransform, { passive: true });
-    // Update on resize
-    window.addEventListener('resize', updateTransform, { passive: true });
-    // Initial position
-    requestAnimationFrame(updateTransform);
-
-    return () => {
-      container.removeEventListener('scroll', updateTransform);
-      window.removeEventListener('resize', updateTransform);
+    // Use MutationObserver-friendly approach: poll on animation frame
+    let rafId;
+    const tick = () => {
+      updateTransform();
+      rafId = requestAnimationFrame(tick);
     };
+    rafId = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(rafId);
   }, [containerRef, updateTransform]);
 
   return (
     <article
       ref={cardRef}
-      onClick={() => onOpenDetail(project)}
+      onClick={(e) => {
+        e.stopPropagation();
+        onOpenDetail(project);
+      }}
       style={{
         backgroundColor: '#ffffff',
         borderRadius: '20px',
         overflow: 'hidden',
-        width: '380px',
-        minWidth: '380px',
+        width: '340px',
+        minWidth: '340px',
         display: 'flex',
         flexDirection: 'column',
         cursor: 'pointer',
@@ -82,7 +73,7 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
       {/* Image */}
       <div style={{
         width: '100%',
-        height: '380px',
+        height: '340px',
         overflow: 'hidden',
         backgroundColor: '#f0f0f2',
         flexShrink: 0
@@ -103,13 +94,13 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
 
       {/* Text */}
       <div style={{
-        padding: '20px 20px 24px 20px',
+        padding: '18px 18px 22px 18px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '8px'
+        gap: '6px'
       }}>
         <h3 style={{
-          fontSize: '17px',
+          fontSize: '16px',
           fontWeight: 600,
           lineHeight: '1.3',
           color: '#1a1a1a',
@@ -128,7 +119,7 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
           lineHeight: '1.5',
           color: '#5f6368',
           display: '-webkit-box',
-          WebkitLineClamp: 3,
+          WebkitLineClamp: 2,
           WebkitBoxOrient: 'vertical',
           overflow: 'hidden',
           margin: 0
@@ -136,7 +127,7 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
           {project.description}
         </p>
 
-        <div style={{ paddingTop: '8px' }}>
+        <div style={{ paddingTop: '6px' }}>
           <span style={{
             fontSize: '13px',
             fontWeight: 500,
