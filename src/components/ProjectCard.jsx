@@ -60,8 +60,8 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
         backgroundColor: '#ffffff',
         borderRadius: '20px',
         overflow: 'hidden',
-        width: '310px',
-        minWidth: '310px',
+        width: '380px',
+        minWidth: '380px',
         display: 'flex',
         flexDirection: 'column',
         cursor: 'pointer',
@@ -82,7 +82,7 @@ export default function ProjectCard({ project, onOpenDetail, containerRef }) {
       {/* Image */}
       <div style={{
         width: '100%',
-        height: '320px',
+        height: '380px',
         overflow: 'hidden',
         backgroundColor: '#f0f0f2',
         flexShrink: 0
