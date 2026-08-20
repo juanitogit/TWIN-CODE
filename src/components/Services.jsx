@@ -40,18 +40,18 @@ const SERVICES = [
 
 export default function Services() {
   const sectionRef = useRef(null);
-  const cardsRef = useRef([]);
+  const itemsRef = useRef([]);
 
   useEffect(() => {
-    if (cardsRef.current && cardsRef.current.length > 0) {
+    if (itemsRef.current && itemsRef.current.length > 0) {
       gsap.fromTo(
-        cardsRef.current,
-        { y: 30, opacity: 0 },
+        itemsRef.current,
+        { y: 24, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.7,
-          stagger: 0.1,
+          duration: 0.6,
+          stagger: 0.08,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -82,10 +82,18 @@ export default function Services() {
           alignItems: 'flex-end',
           justifyContent: 'space-between',
           gap: '16px',
-          marginBottom: '54px'
+          marginBottom: '64px'
         }}>
           <div>
-            <span className="apple-section-label" style={{ display: 'block', marginBottom: '8px' }}>
+            <span style={{
+              display: 'block',
+              marginBottom: '10px',
+              fontSize: '12px',
+              fontWeight: 500,
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              color: '#86868b'
+            }}>
               Soluciones Tecnológicas
             </span>
             <h2 style={{
@@ -99,51 +107,58 @@ export default function Services() {
           </div>
           <span style={{
             fontSize: '13px',
-            color: 'var(--color-smoke)',
+            color: '#86868b',
             letterSpacing: '-0.01em'
           }}>
             Desarrollo, automatización e infraestructura digital
           </span>
         </div>
 
-        {/* 3x2 Service Grid with GSAP Stagger */}
+        {/* Clean list layout — no cards */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '20px'
+          gap: '0'
         }}>
           {SERVICES.map((service, index) => {
             const Icon = service.icon;
+            // Grid position for border logic
+            const col = index % 3;
+            const row = Math.floor(index / 3);
+            const isLastRow = row >= Math.floor((SERVICES.length - 1) / 3);
+
             return (
               <div
                 key={index}
-                ref={(el) => (cardsRef.current[index] = el)}
-                className="interactive-card"
+                ref={(el) => (itemsRef.current[index] = el)}
                 style={{
-                  padding: '36px 32px',
-                  backgroundColor: '#0d0d0f',
-                  border: '1px solid rgba(255, 255, 255, 0.14)',
-                  borderRadius: 'var(--radius-apple-md)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  position: 'relative',
-                  opacity: 1
+                  padding: '40px 36px',
+                  borderRight: col < 2 ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
+                  borderBottom: !isLastRow ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
+                  opacity: 1,
+                  transition: 'background-color 0.3s ease'
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
                 }}
               >
-                {/* Icon Row */}
-                <div style={{ marginBottom: '20px' }}>
+                {/* Icon */}
+                <div style={{ marginBottom: '24px' }}>
                   <Icon
-                    size={26}
-                    strokeWidth={1.6}
-                    style={{ color: 'var(--color-compass-gold)' }}
+                    size={24}
+                    strokeWidth={1.5}
+                    style={{ color: '#86868b' }}
                   />
                 </div>
 
-                {/* Service Heading */}
+                {/* Title */}
                 <h3 style={{
-                  fontSize: '17px',
+                  fontSize: '16px',
                   fontWeight: 600,
-                  color: '#ffffff',
+                  color: '#f5f5f7',
                   marginBottom: '12px',
                   lineHeight: '1.35',
                   letterSpacing: '-0.01em'
@@ -151,11 +166,11 @@ export default function Services() {
                   {service.title}
                 </h3>
 
-                {/* Service Description */}
+                {/* Description */}
                 <p style={{
                   fontSize: '14px',
-                  lineHeight: '1.6',
-                  color: '#b0b0b5',
+                  lineHeight: '1.65',
+                  color: '#86868b',
                   fontWeight: 400
                 }}>
                   {service.description}
